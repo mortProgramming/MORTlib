@@ -2,12 +2,14 @@ plugins {
   id 'cpp'
   id 'java'
   id 'google-test'
-  id 'edu.wpi.first.wpilib.repositories.WPILibRepositoriesPlugin' version '2020.2'
-  id 'edu.wpi.first.NativeUtils' version '2025.2.1'
+  id 'edu.wpi.first.wpilib.repositories.WPILibRepositoriesPlugin' version '2025.0'
+  id 'edu.wpi.first.NativeUtils' version '2025.9.0'
   id 'edu.wpi.first.GradleJni' version '1.1.0'
   id 'edu.wpi.first.GradleVsCode' version '2.1.0'
   id 'edu.wpi.first.GradleRIO' version '2025.2.1'
+}
 
+// apply plugin: 'edu.wpi.first.wpilib.repositories.WPILibRepositoriesPlugin'
 
 java {
     sourceCompatibility = JavaVersion.VERSION_17
@@ -19,26 +21,45 @@ allprojects {
     version '25.0.1'
 
     repositories {
-        mavenCentral()
 
-        maven { url = uri('https://frcmaven.wpi.edu/artifactory/release/') }
+      mavenCentral()
+      maven { url = uri('https://maven.ctr-electronics.com/release/') }
+      maven { url = uri('https://maven.revrobotics.com/') }
+      maven { url = uri('https://dev.studica.com/maven/release/2025/') }
+      maven { url = uri('https://3015rangerrobotics.github.io/pathplannerlib/repo/') }
+      maven { url = uri('https://frcmaven.wpi.edu/artifactory/release/') }
+      maven { url = uri('https://maven.photonvision.org/repository/internal') }
+      maven { url = uri('https://maven.photonvision.org/repository/snapshots') }
 
-        // CTRE
-        maven { url = uri('https://maven.ctr-electronics.com/release/') }
+        // mavenCentral()
+
+        // maven { url = uri('https://frcmaven.wpi.edu/artifactory/release/') }
+
+        // // CTRE
+        // maven { url = uri('https://maven.ctr-electronics.com/release/') }
  
-        // REV
-        maven { url = uri('https://maven.revrobotics.com/') }
+        // // REV
+        // maven { url = uri('https://maven.revrobotics.com/') }
 
-        // kauailabs
-        maven { url = uri('https://dev.studica.com/maven/release/2025/') }
+        // // kauailabs
+        // maven { url = uri('https://dev.studica.com/maven/release/2025/') }
 
-        // PathPlanner
-        maven { url = uri('https://3015rangerrobotics.github.io/pathplannerlib/repo/') }
+        // // PathPlanner
+        // maven { url = uri('https://3015rangerrobotics.github.io/pathplannerlib/repo/') }
 
-        // PhotonVisiom
-        maven { url = uri('https://maven.photonvision.org/repository/internal') }
-        maven { url = uri('https://maven.photonvision.org/repository/snapshots') }
+        // // PhotonVisiom
+        // maven { url = uri('https://maven.photonvision.org/repository/internal') }
+        // maven { url = uri('https://maven.photonvision.org/repository/snapshots') }
     }
+}
+
+configurations {
+    roborioDebug
+    roborioRelease
+    nativeDebug
+    nativeRelease
+    simulationDebug
+    simulationRelease
 }
 
 if (project.hasProperty('releaseMode')) {
@@ -52,42 +73,59 @@ apply from: 'config.gradle'
 
 // Apply Java configuration
 dependencies {
-    implementation 'edu.wpi.first.cscore:cscore-java:2025.+'
-    implementation 'edu.wpi.first.cameraserver:cameraserver-java:2025.+'
-    implementation 'edu.wpi.first.ntcore:ntcore-java:2025.+'
-    implementation 'edu.wpi.first.wpilibj:wpilibj-java:2025.+'
-    implementation 'edu.wpi.first.wpiutil:wpiutil-java:2025.+'
-    implementation 'edu.wpi.first.wpimath:wpimath-java:2025.+'
-    implementation 'edu.wpi.first.wpiunits:wpiunits-java:2025.+'
-    implementation 'edu.wpi.first.hal:hal-java:2025.+'
-    implementation "org.ejml:ejml-simple:0.43.1"
-    implementation "com.fasterxml.jackson.core:jackson-annotations:2.12.4"
-    implementation "com.fasterxml.jackson.core:jackson-core:2.12.4"
-    implementation "com.fasterxml.jackson.core:jackson-databind:2.12.4"
-    implementation 'edu.wpi.first.thirdparty.frc2025.opencv:opencv-java:4.8.0-2'
+    implementation "edu.wpi.first.wpilibj:wpilibj-java:${wpilib_version}"
+    implementation "edu.wpi.first.wpiutil:wpiutil-java:${wpilib_version}"
+    implementation "edu.wpi.first.wpimath:wpimath-java:${wpilib_version}"
+    implementation "edu.wpi.first.wpiunits:wpiunits-java:${wpilib_version}"
+    implementation "edu.wpi.first.hal:hal-java:${wpilib_version}"
 
-    implementation "edu.wpi.first.wpilibNewCommands:wpilibNewCommands-java:${wpilib_version}"
+    // implementation 'edu.wpi.first.cscore:cscore-java:2025.+'
+    // implementation 'edu.wpi.first.cameraserver:cameraserver-java:2025.+'
+    // implementation 'edu.wpi.first.ntcore:ntcore-java:2025.+'
+    // implementation 'edu.wpi.first.wpilibj:wpilibj-java:2025.+'
+    // implementation 'edu.wpi.first.wpiutil:wpiutil-java:2025.+'
+    // implementation 'edu.wpi.first.wpimath:wpimath-java:2025.+'
+    // implementation 'edu.wpi.first.wpiunits:wpiunits-java:2025.+'
+    // implementation 'edu.wpi.first.hal:hal-java:2025.+'
+    // implementation "org.ejml:ejml-simple:0.43.1"
+    // implementation "com.fasterxml.jackson.core:jackson-annotations:2.12.4"
+    // implementation "com.fasterxml.jackson.core:jackson-core:2.12.4"
+    // implementation "com.fasterxml.jackson.core:jackson-databind:2.12.4"
+    // implementation 'edu.wpi.first.thirdparty.frc2025.opencv:opencv-java:4.8.0-2'
 
-    annotationProcessor wpi.java.deps.wpilibAnnotations()
-    implementation wpi.java.deps.wpilib()
-    implementation wpi.java.vendor.java()
+    // implementation "edu.wpi.first.wpilibNewCommands:wpilibNewCommands-java:${wpilib_version}"
 
-    roborioDebug wpi.java.deps.wpilibJniDebug(wpi.platforms.roborio)
-    roborioDebug wpi.java.vendor.jniDebug(wpi.platforms.roborio)
+    // roborioDebug 'edu.wpi.first.wpilibj:wpilibj-java:2025.+'
+    // roborioDebug 'edu.wpi.first.hal:hal-java:2025.+'
+    // roborioRelease 'edu.wpi.first.wpilibj:wpilibj-java:2025.+'
+    // roborioRelease 'edu.wpi.first.hal:hal-java:2025.+'
 
-    roborioRelease wpi.java.deps.wpilibJniRelease(wpi.platforms.roborio)
-    roborioRelease wpi.java.vendor.jniRelease(wpi.platforms.roborio)
+    // annotationProcessor wpi.java.deps.wpilibAnnotations()
+    // implementation wpi.java.deps.wpilib()
+    // implementation wpi.java.vendor.java()
 
-    nativeDebug wpi.java.deps.wpilibJniDebug(wpi.platforms.desktop)
-    nativeDebug wpi.java.vendor.jniDebug(wpi.platforms.desktop)
-    simulationDebug wpi.sim.enableDebug()
+    // roborioDebug wpi.java.deps.wpilibJniDebug(wpi.platforms.roborio)
+    // roborioDebug wpi.java.vendor.jniDebug(wpi.platforms.roborio)
 
-    nativeRelease wpi.java.deps.wpilibJniRelease(wpi.platforms.desktop)
-    nativeRelease wpi.java.vendor.jniRelease(wpi.platforms.desktop)
-    simulationRelease wpi.sim.enableRelease()
+    // roborioRelease wpi.java.deps.wpilibJniRelease(wpi.platforms.roborio)
+    // roborioRelease wpi.java.vendor.jniRelease(wpi.platforms.roborio)
+
+    // nativeDebug wpi.java.deps.wpilibJniDebug(wpi.platforms.desktop)
+    // nativeDebug wpi.java.vendor.jniDebug(wpi.platforms.desktop)
+    // simulationDebug wpi.sim.enableDebug()
+
+    // nativeRelease wpi.java.deps.wpilibJniRelease(wpi.platforms.desktop)
+    // nativeRelease wpi.java.vendor.jniRelease(wpi.platforms.desktop)
+    // simulationRelease wpi.sim.enableRelease()
+
+    implementation("edu.wpi.first.NativeUtils:edu.wpi.first.NativeUtils.gradle.plugin:2025.9.0")
+    implementation("edu.wpi.first.GradleRIO:edu.wpi.first.GradleRIO.gradle.plugin:2025.2.1")
+    implementation("edu.wpi.first.GradleJni:edu.wpi.first.GradleJni.gradle.plugin:1.1.0")
 
     testImplementation 'org.junit.jupiter:junit-jupiter:5.10.1'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    implementation 'edu.wpi.first.thirdparty.frc2025.opencv:opencv-java:4.8.0-2'
 
 
     // CTRE is implementation because it is not a hard requirement
@@ -136,17 +174,17 @@ model {
       nativeUtils.useRequiredLibrary(it, 'wpilib_shared')
     }
   }
-  testSuites {
-    MORTlibTest {
-        sources.cpp {
-            source {
-                srcDir 'src/test/native/cpp'
-                include '**/*.cpp'
-            }
-        }
-        nativeUtils.useRequiredLibrary(it, "wpilib_executable_shared", "googletest_static")
-    }
-  }
+//   testSuites {
+//     MORTlibTest {
+//         sources.cpp {
+//             source {
+//                 srcDir 'src/test/native/cpp'
+//                 include '**/*.cpp'
+//             }
+//         }
+//         nativeUtils.useRequiredLibrary(it, "wpilib_executable_shared", "googletest_static")
+//     }
+//   }
 }
 
 apply from: 'publish.gradle'

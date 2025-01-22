@@ -25,6 +25,7 @@ public class Pigeon2IMU implements IMUIntf {
 
     public double getAngle() {
         return imu.getAngle();
+        // return -imu.getYaw();
     }
 
     public double getRate() {
